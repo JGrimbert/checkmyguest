@@ -1,0 +1,55 @@
+body {
+    background: #F5F5FA;
+}
+
+#app {
+
+    label {
+        display: block;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    figcaption, .legend {
+        background: #FFFFFF;
+        -webkit-box-shadow: 6px 6px 12px -1px rgba(0,0,0,0.14), 0px 0px 9px 5px #F8F8FB;
+        box-shadow: 6px 6px 12px -1px rgba(0,0,0,0.14), 0px 0px 9px 5px #F8F8FB;
+        padding: 8px;
+        border-radius: 8px;
+    }
+
+    .inputXL {
+
+        border-radius:8px;
+        -webkit-box-shadow: 4px 5px 5px -2px #D8D8E0;
+        box-shadow: 4px 5px 5px -2px #D8D8E0;
+        background: #FFFFFF;
+        border-radius: 16px;
+        padding: 2px;
+        font-size: 2.1em;
+
+        input {
+            -webkit-appearance: none;
+            appearance: none;
+            padding: 4px 70px;
+            border: 0px;
+            color: #ABAFCC;
+            background: #F7F7FB;
+            border-radius: 16px;
+            -webkit-box-shadow: inset 0px 0px 15px 0px #EAEAEE;
+            box-shadow: inset 16px 0px 10px 4px #EAEAEE;
+        }
+
+        span {
+            position:absolute;
+            color:#ABAFCC;
+            background: #F5F4FC;
+            line-height: 1.75em;
+            padding: 0 12px;
+            border-radius: 15px 0 0 15px;
+        }
+
+    }
+}
