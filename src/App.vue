@@ -190,29 +190,34 @@ export default {
     }
   }
 
+  .apexcharts-canvas {
+    margin: auto;
+  }
+
+
   .bullet {
       padding-left: 2em;
-  }
 
-  .bullet::before {
-    content:" ";
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    position: relative;
-    top:3px;
-    left:-1em;
-    border-radius: 0.33em;
-  }
+      &::before {
+        content:" ";
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        position: relative;
+        top:3px;
+        left:-1em;
+        border-radius: 0.33em;
+      }
 
-  .bullet-coutInterets::before {
-    background:#F44336;
-  }
+      &-coutInterets::before {
+        background:#F44336;
+      }
 
-  .bullet-mensualite::before {
-    background: #E91E63;
-  }
+      &-mensualite::before {
+        background: #E91E63;
+      }
 
+  }
 
 }
 
