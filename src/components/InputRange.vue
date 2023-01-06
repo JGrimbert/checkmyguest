@@ -27,7 +27,6 @@ export default {
       name: { default: '' },
       legend: { default: '' }
     },
-    legende: {}
   },
   data: () => ({
     style: ''
