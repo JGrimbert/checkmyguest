@@ -12,25 +12,18 @@
       </b-row>
       <b-row>
         <b-col xs="6">
-          <div>
-            <label for="montantBien">Montant du bien</label>
-            <div class="inputXL">
-              <span>€</span>
-              <input id="montantBien" type="number" v-model="pret">
-            </div>
-          </div>
-          <figure>
-            <apexchart
-                type="donut"
-                width="360"
-                :options="chartOptions"
-                :series="coutMensuel"
-            ></apexchart>
-            <figcaption>
-              <div><span class="bullet bullet-mensualite">Mensualité: </span>{{ mensualite }} € / mois</div>
-              <div><span class="bullet bullet-coutInterets">Coût des intérêts: </span>{{ coutInterets }} € / mois</div>
-            </figcaption>
-          </figure>
+          <InputXL
+              label="Montant du bien"
+              append="€"
+              :montant="pret"
+              @updateInput="updatePret"
+          />
+          <apexchart
+              type="donut"
+              width="420"
+              :options="chartOptions"
+              :series="coutMensuel"
+          ></apexchart>
         </b-col>
         <b-col xs="6">
           <inputRange
@@ -57,15 +50,16 @@
 <script>
 
 import InputRange from "./components/InputRange.vue";
+import InputXL from "./components/InputXL.vue";
 
 export default {
   name: 'App',
-  components: { InputRange },
+  components: { InputRange, InputXL },
   data: () => ({
     chartOptions: {
-      colors:['#F44336', '#E91E63'],
+      colors:['#E91E63', '#F44336'],
+      labels:["Mensualités", "Coût des intérêts"],
       chart: {
-        width: 360,
         type: 'donut',
         dropShadow: {
           enabled: true,
@@ -78,19 +72,26 @@ export default {
       dataLabels: {
         enabled: false
       },
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 200
-          },
-          legend: {
-            show: false
-          }
-        }
-      }],
       legend: {
-        show: false
+        position: "bottom",
+        horizontalAlign: 'left',
+        offsetY: 20,
+        fontFamily: 'URW Geometric',
+        fontSize: 16,
+        markers: {
+          offsetY: 3,
+          offsetX: -8,
+          width: 16,
+          height:16,
+          radius: 4,
+        },
+        itemMargin: {
+          horizontal: 24,
+          vertical: 8
+        },
+        formatter: function(seriesName, opts) {
+          return [seriesName, ":", opts.w.globals.series[opts.seriesIndex] + "€ / mois"]
+        }
       },
     },
     pret: 100000,
@@ -123,6 +124,9 @@ export default {
     updateTaux (montant) {
       this.taux.montant = montant;
     },
+    updatePret (montant) {
+      this.pret = montant;
+    }
   },
   computed:  {
     legendeApport () {
@@ -177,23 +181,23 @@ export default {
     }
   }
 
-  figure {
-    margin-top: 3em;
+  .apexcharts {
 
-    figcaption {
-
-      margin-top: 2em;
-
-      div {
-        margin: 0.66em 0;
-      }
+    &-canvas {
+      margin: 2em auto 4em;
     }
-  }
 
-  .apexcharts-canvas {
-    margin: auto;
-  }
+    &-canvas svg {
+      /* Allow the legend to overflow the chart area */
+      overflow: visible;
+    }
 
+    &-canvas svg foreignObject {
+      /* Allow the legend to overflow the legend container */
+      overflow: visible;
+    }
+
+  }
 
   .bullet {
       padding-left: 2em;

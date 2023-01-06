@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-import { BootstrapVue, IconsPlugin, BIcon } from 'bootstrap-vue';
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 
 import VueApexCharts from 'vue-apexcharts'
 
@@ -18,8 +18,6 @@ Vue.use(IconsPlugin)
 
 Vue.use(VueApexCharts)
 Vue.component('apexchart', VueApexCharts)
-
-Vue.component('BIcon', BIcon);
 
 new Vue({
   render: h => h(App),
