@@ -11,7 +11,7 @@
         :value="range.montant"
         @input="updateRange"
     >
-    <div class="legend">{{ legende }}</div>
+    <div class="legend">{{ range.legend }}</div>
   </div>
 </template>
 
@@ -24,6 +24,8 @@ export default {
       montant: {},
       min: {},
       max: {},
+      name: { default: '' },
+      legend: { default: '' }
     },
     legende: {}
   },
@@ -43,7 +45,7 @@ export default {
 
       target.style.backgroundSize = (val - min) * 100 / (max - min) + '% 100%'
 
-      this.$emit("updateRange", target.value)
+      this.$emit("updateInput", target.value, this.range.name)
     }
   }
 }

@@ -12,12 +12,7 @@
       </b-row>
       <b-row>
         <b-col xs="6">
-          <InputXL
-              label="Montant du bien"
-              append="€"
-              :montant="pret"
-              @updateInput="updatePret"
-          />
+          <InputXL :input="ranges.pret" @updateInput="updateInput"/>
           <apexchart
               type="donut"
               width="420"
@@ -27,19 +22,19 @@
         </b-col>
         <b-col xs="6">
           <inputRange
-            :range="apport"
-            :legende="legendeApport"
-            @updateRange="updateApport"
+            :range="ranges.apport"
+            :legende="ranges.apport.legend"
+            @updateInput="updateInput"
           />
           <inputRange
-            :range="duree"
-            :legende="legendeDuree"
-            @updateRange="updateDuree"
+            :range="ranges.duree"
+            :legende="ranges.duree.legend"
+            @updateInput="updateInput"
           />
           <inputRange
-            :range="taux"
-            :legende="legendeTaux"
-            @updateRange="updateTaux"
+            :range="ranges.taux"
+            :legende="ranges.taux.legend"
+            @updateInput="updateInput"
           />
         </b-col>
       </b-row>
@@ -56,6 +51,43 @@ export default {
   name: 'App',
   components: { InputRange, InputXL },
   data: () => ({
+    inputs: {
+      pret: {
+        name: 'pret',
+        montant:100000,
+        label: "Montant du bien",
+        append: "€",
+        legend: (e) => e
+      },
+      apport: {
+        name: 'apport',
+        type: "range",
+        label: "Montant de l'apport",
+        montant:20,
+        min:10,
+        max:40,
+        legend: ({ apport, montantApport }) => `${Math.floor(montantApport)}€ - ${apport}% du prix`,
+      },
+      duree:{
+        name: 'duree',
+        type: "range",
+        label: 'Durée de',
+        montant:20,
+        min:10,
+        max:30,
+        legend: ({ duree }) => `Durée de ${duree} ans`,
+      },
+      taux:{
+        name: 'taux',
+        type: "range",
+        label: "Taux d'intérêt",
+        montant:165,
+        min:100,
+        max:300,
+        legend: ({ taux }) => taux/100 + "%",
+      },
+    },
+    /** ApexChart options **/
     chartOptions: {
       colors:['#E91E63', '#F44336'],
       labels:["Mensualités", "Coût des intérêts"],
@@ -94,55 +126,42 @@ export default {
         }
       },
     },
-    pret: 100000,
-    apport: {
-      label: "Montant de l'apport",
-      montant:20000,
-      min:10000,
-      max:100000,
-    },
-    duree:{
-      label: 'Durée de',
-      montant:20,
-      min:10,
-      max:30,
-    },
-    taux:{
-      label: "Taux d'intérêt",
-      montant:165,
-      min:100,
-      max:300,
-    },
   }),
   methods: {
-    updateApport (montant) {
-      this.apport.montant = montant;
+    updateInput (montant, name) {
+      this.inputs[name].montant = montant;
     },
-    updateDuree (montant) {
-      this.duree.montant = montant;
-    },
-    updateTaux (montant) {
-      this.taux.montant = montant;
-    },
-    updatePret (montant) {
-      this.pret = montant;
-    }
   },
   computed:  {
-    legendeApport () {
-      return `${this.apport.montant}€ - ${Math.floor(100-((this.pret-this.apport.montant)/this.pret*100))}% du prix`
+    montantApportEuro () {
+      return this.inputs.pret.montant/100*this.inputs.apport.montant;
     },
-    legendeDuree () {
-      return 'Durée de ' + this.duree.montant + " ans";
-    },
-    legendeTaux () {
-      return this.taux.montant/100 + "%"
+    ranges () {
+      return Object.values(this.inputs).reduce((acc, cur) => {
+        return {
+          ...acc,
+          [cur.name]: {
+            ...this.inputs[cur.name],
+            legend: this.inputs[cur.name].legend({
+              apport: this.inputs.apport.montant,
+              duree: this.inputs.duree.montant,
+              taux: this.inputs.taux.montant,
+              montantApport: this.montantApportEuro,
+            })
+          }
+        }
+      }, {});
     },
     mensualite () {
-      return Math.floor((this.pret-this.apport.montant)/(this.duree.montant * 12))
+      return Math.floor((this.inputs.pret.montant-this.montantApportEuro)/(this.inputs.duree.montant * 12))
     },
     coutInterets () {
-      return Math.floor(this.mensualite / (this.taux.montant/100))
+
+      const coutWithoutApport = (this.inputs.pret.montant/(this.inputs.duree.montant * 12)) / (this.inputs.taux.montant/100);
+      const coutWithApport = this.mensualite / (this.inputs.taux.montant/100);
+      const diffWithApport = (coutWithoutApport - coutWithApport)*1.8;
+
+      return Math.floor(coutWithApport-diffWithApport)
     },
     coutMensuel () {
       return [this.mensualite,this.coutInterets]
@@ -158,9 +177,9 @@ export default {
 @font-face {
   font-family: 'URW Geometric';
   src: local('URW Geometric Regular'), local('URW-Geometric-Regular'),
-  url('assets/URWGeometric-Regular.woff2') format('woff2'),
-  url('assets/URWGeometric-Regular.woff') format('woff'),
-  url('assets/URWGeometric-Regular.ttf') format('truetype');
+  url('assets/fonts/URWGeometric-Regular.woff2') format('woff2'),
+  url('assets/fonts/URWGeometric-Regular.woff') format('woff'),
+  url('assets/fonts/URWGeometric-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
@@ -188,12 +207,10 @@ export default {
     }
 
     &-canvas svg {
-      /* Allow the legend to overflow the chart area */
       overflow: visible;
     }
 
     &-canvas svg foreignObject {
-      /* Allow the legend to overflow the legend container */
       overflow: visible;
     }
 

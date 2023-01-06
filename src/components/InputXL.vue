@@ -1,13 +1,13 @@
 <template>
   <div>
-    <label for="montant">{{ label }}</label>
+    <label for="montant">{{ input.label }}</label>
     <div class="inputXL">
-      <span>{{  append }}</span>
+      <span>{{ input.append }}</span>
       <input
           id="montant"
           type="number"
           ref="input"
-          :value="montant"
+          :value="input.montant"
           @input="updateInput"
       >
     </div>
@@ -18,13 +18,16 @@
 export default {
   name: "InputXL",
   props: {
-    label: { default: "" },
-    append: { default: "" },
-    montant: { default: 0 }
+    input: {
+      label: { default: "" },
+      append: { default: "" },
+      montant: { default: 0 },
+      name: { default: "" }
+    },
   },
   methods: {
     updateInput () {
-      this.$emit('updateInput', this.$refs["input"].value)
+      this.$emit('updateInput', this.$refs["input"].value, this.input.name)
     }
   }
 }
