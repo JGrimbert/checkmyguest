@@ -3,7 +3,7 @@
     <div>
       <div class="grid grid-cols-1">
         <div class="header">
-          <h1>Calculez vos mensualités</h1>
+          <h1 class="text-4xl m-5">Calculez vos mensualités</h1>
           <p>
             Calculez rapidement le montant de vos mensualités de remboursement de votre investissement locatif.
             Vous retrouverez en détails le montant du remboursement dû à votre emprunt ainsi que le coût des intérêts.
