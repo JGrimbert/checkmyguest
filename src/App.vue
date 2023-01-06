@@ -106,7 +106,7 @@ export default {
           vertical: 8
         },
         formatter: function(seriesName, opts) {
-          return [seriesName, ":", opts.w.globals.series[opts.seriesIndex] + "€ / mois"]
+          return [seriesName, ":<b class='text-lg'>", opts.w.globals.series[opts.seriesIndex] + "€ / mois</b>"]
         }
       },
     },
