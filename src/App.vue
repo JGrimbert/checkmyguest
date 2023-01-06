@@ -1,33 +1,29 @@
 <template>
   <div id="app">
-    <div>
-      <div class="grid grid-cols-1">
-        <div class="header">
-          <h1 class="text-4xl m-5">Calculez vos mensualités</h1>
+      <div class="header">
+          <h1 class="text-6xl m-5">Calculez vos mensualités</h1>
           <p>
             Calculez rapidement le montant de vos mensualités de remboursement de votre investissement locatif.
             Vous retrouverez en détails le montant du remboursement dû à votre emprunt ainsi que le coût des intérêts.
           </p>
-        </div>
       </div>
-      <div class="grid lg:grid-cols-2 grid-cols-1 gap-20">
-        <div xs="6">
+      <div class="body">
+        <div class="mb-8 mx-6">
           <InputXL :input="ranges.pret" @updateInput="updateInput"/>
           <apexchart
               type="donut"
-              width="100%"
+              height="500"
               :options="chartOptions"
               :series="coutMensuel"
           ></apexchart>
         </div>
-        <div xs="6">
+        <div class="flex flex-col">
           <inputRange :range="ranges.apport" @updateInput="updateInput"/>
           <inputRange :range="ranges.duree" @updateInput="updateInput"/>
           <inputRange :range="ranges.taux"  @updateInput="updateInput"/>
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -172,6 +168,16 @@ export default {
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'URW Geometric';
+  src: local('URW Geometric Medium'), local('URW-Geometric-Medium'),
+  url('assets/fonts/URWGeometric-Medium.woff2') format('woff2'),
+  url('assets/fonts/URWGeometric-Medium.woff') format('woff'),
+  url('assets/fonts/URWGeometric-Medium.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
 #app {
 
   font-family: URW Geometric;
@@ -180,12 +186,11 @@ export default {
   padding:2em 20%;
 
   .header {
-    text-align: center;
-    margin-bottom: 2em;
+    @apply grid grid-cols-1 text-center text-xl mb-12
+  }
 
-    p {
-      font-size: 1.2em;
-    }
+  .body {
+    @apply grid grid-cols-1 lg:grid-cols-2
   }
 
   .apexcharts {

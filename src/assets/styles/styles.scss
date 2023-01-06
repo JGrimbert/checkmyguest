@@ -8,8 +8,30 @@ body {
 
 #app {
 
+    .apexcharts-pie {
+        circle {
+            //stroke-width: 1em;
+            //stroke: white;
+            -webkit-box-shadow: 5px 5px 15px 5px #D6D6DD;
+            box-shadow: 5px 5px 15px 5px #D6D6DD;
+        }
+
+        path: {
+            stroke: transparent;
+        }
+
+        .apexcharts-slices {
+            .apexcharts-series {
+                stroke-width: 1em;
+            }
+        }
+    }
+
+
+
     label {
         display: block;
+        margin-bottom: 0.8em;
     }
 
     input {
@@ -24,6 +46,7 @@ body {
         box-shadow: 6px 6px 12px -1px rgba(0,0,0,0.14), 0px 0px 9px 5px #F8F8FB;
         padding: 8px;
         border-radius: 8px;
+        font-weight: 600;
     }
 
     .inputXL {
