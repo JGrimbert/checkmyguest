@@ -158,25 +158,6 @@ export default {
 </script>
 
 <style lang="scss">
-@font-face {
-  font-family: 'URW Geometric';
-  src: local('URW Geometric Regular'), local('URW-Geometric-Regular'),
-  url('assets/fonts/URWGeometric-Regular.woff2') format('woff2'),
-  url('assets/fonts/URWGeometric-Regular.woff') format('woff'),
-  url('assets/fonts/URWGeometric-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'URW Geometric';
-  src: local('URW Geometric Medium'), local('URW-Geometric-Medium'),
-  url('assets/fonts/URWGeometric-Medium.woff2') format('woff2'),
-  url('assets/fonts/URWGeometric-Medium.woff') format('woff'),
-  url('assets/fonts/URWGeometric-Medium.ttf') format('truetype');
-  font-weight: 600;
-  font-style: normal;
-}
 
 #app {
 
