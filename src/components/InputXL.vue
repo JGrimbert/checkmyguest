@@ -14,8 +14,10 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   name: "InputXL",
   props: {
     input: {
@@ -30,7 +32,7 @@ export default {
       this.$emit('updateInput', this.$refs["input"].value, this.input.name)
     }
   }
-}
+})
 </script>
 
 <style scoped lang="scss">
@@ -46,6 +48,7 @@ export default {
 
   input {
     -webkit-appearance: none;
+    -moz-appearance: textfield;
     appearance: none;
     padding: 4px 70px;
     border: 0px;
@@ -59,6 +62,11 @@ export default {
       outline: transparent;
     }
 
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
 
   }
 
@@ -70,15 +78,6 @@ export default {
     padding: 0 12px;
     border-radius: 15px 0 0 15px;
   }
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
 
-  /* Firefox */
-  input[type=number] {
-    -moz-appearance: textfield;
-  }
 }
 </style>
