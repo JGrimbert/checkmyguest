@@ -9,18 +9,31 @@
       </div>
       <div class="body">
         <div class="mb-8 mx-6">
-          <InputXL :input="ranges.pret" @updateInput="updateInput"/>
+          <InputXL
+              :input="inputs.pret"
+              @update-amount="updateAmount"
+          />
           <apexchart
               type="donut"
               height="500"
               :options="chartOptions"
               :series="coutMensuel"
-          ></apexchart>
+          />
         </div>
         <div class="flex flex-col">
-          <inputRange :range="ranges.apport" @updateInput="updateInput"/>
-          <inputRange :range="ranges.duree" @updateInput="updateInput"/>
-          <inputRange :range="ranges.taux"  @updateInput="updateInput"/>
+          <InputRange
+              :range="inputs.apport"
+              :args="{ montantApport: montantApportEuro }"
+              @update-amount="updateAmount"
+          />
+          <InputRange
+              :range="inputs.duree"
+              @update-amount="updateAmount"
+          />
+          <InputRange
+              :range="inputs.taux"
+              @update-amount="updateAmount"
+          />
         </div>
       </div>
     </div>
@@ -28,12 +41,12 @@
 
 <script>
 
-import InputRange from "./components/InputRange.vue";
 import InputXL from "./components/InputXL.vue";
+import InputRange from "@/components/InputRange.vue";
 
 export default {
   name: 'App',
-  components: { InputRange, InputXL },
+  components: { InputXL, InputRange },
   data: () => ({
     inputs: {
       pret: {
@@ -41,7 +54,6 @@ export default {
         montant:100000,
         label: "Montant du bien",
         append: "€",
-        legend: (e) => e
       },
       apport: {
         name: 'apport',
@@ -50,7 +62,7 @@ export default {
         montant:20,
         min:10,
         max:40,
-        legend: ({ apport, montantApport }) => `${Math.floor(montantApport)}€ - ${apport}% du prix`,
+        legend: ({ montant, montantApport }) => `${Math.floor(montantApport)}€ - ${montant}% du prix`,
       },
       duree:{
         name: 'duree',
@@ -59,7 +71,7 @@ export default {
         montant:20,
         min:10,
         max:30,
-        legend: ({ duree }) => `Durée de ${duree} ans`,
+        legend: ({ montant }) => `Durée de ${montant} ans`,
       },
       taux:{
         name: 'taux',
@@ -68,7 +80,7 @@ export default {
         montant:165,
         min:100,
         max:300,
-        legend: ({ taux }) => taux/100 + "%",
+        legend: ({ montant }) => montant/100 + "%",
       },
     },
     /** ApexChart options **/
@@ -112,29 +124,14 @@ export default {
     },
   }),
   methods: {
-    updateInput (montant, name) {
-      this.inputs[name].montant = montant;
-    },
+    updateAmount (name, montant) {
+      console.log("pkdlmqsdmkq", name, montant)
+      this.inputs[name].montant = montant.value;
+    }
   },
   computed:  {
     montantApportEuro () {
       return this.inputs.pret.montant/100*this.inputs.apport.montant;
-    },
-    ranges () {
-      return Object.values(this.inputs).reduce((acc, cur) => {
-        return {
-          ...acc,
-          [cur.name]: {
-            ...this.inputs[cur.name],
-            legend: this.inputs[cur.name].legend({
-              apport: this.inputs.apport.montant,
-              duree: this.inputs.duree.montant,
-              taux: this.inputs.taux.montant,
-              montantApport: this.montantApportEuro,
-            })
-          }
-        }
-      }, {});
     },
     mensualite () {
       return Math.floor((this.inputs.pret.montant-this.montantApportEuro)/(this.inputs.duree.montant * 12))
@@ -151,9 +148,6 @@ export default {
       return [this.mensualite,this.coutInterets]
     }
   },
-  mounted () {
-
-  }
 }
 </script>
 

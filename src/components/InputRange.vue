@@ -9,43 +9,43 @@
         :min="range.min"
         :max="range.max"
         :value="range.montant"
-        @input="updateRange"
+        @input="({ target }) => updateAmount(target)"
     >
-    <div class="legend">{{ range.legend }}</div>
+    <div class="legend">{{ legend }}</div>
   </div>
 </template>
 
-<script>
-export default {
-  name: "InputRange",
-  props: {
-    range: {
-      label: {},
-      montant: {},
-      min: {},
-      max: {},
-      name: { default: '' },
-      legend: { default: '' }
-    },
-  },
-  data: () => ({
-    style: ''
-  }),
+<script lang="ts">
+import {Component, Prop, Vue, Provide, Emit} from 'vue-property-decorator';
+import {InputRange} from "@/models/inputs";
+
+@Component
+export default class ComponentInputRange extends Vue {
+
+  @Prop() range: InputRange | { legend: () => {}, montant: number, name: string };
+  @Prop() args: object | { };
+
+  @Provide() style = '' as string;
+
+  get legend() {
+    return this.range.legend({...this.args, montant: this.range.montant})
+  }
+
+  @Emit()
+  updateAmount (target: any) {
+
+    const min: number = parseInt(target.min);
+    const max: number = parseInt(target.max);
+    const val: number = parseInt(target.value);
+
+    target.style.backgroundSize = (val - min) * 100 / (max - min) + "% 100%";
+
+    return this.range.name;
+
+  }
+
   mounted() {
-    this.updateRange()
-  },
-  methods: {
-    updateRange () {
-
-      const target = this.$refs["range"];
-      const min = target.min
-      const max = target.max
-      const val = target.value
-
-      target.style.backgroundSize = (val - min) * 100 / (max - min) + '% 100%'
-
-      this.$emit("updateInput", target.value, this.range.name)
-    }
+    this.updateAmount(this.$refs["range"])
   }
 }
 </script>
@@ -69,20 +69,20 @@ export default {
   &-wrapper {
     margin:auto 2em;
   }
-}
 
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #F7F7FB;
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #F7F7FB;
 
-  -webkit-box-shadow: 6px 6px 12px -1px rgba(0,0,0,0.14);
-  box-shadow: 2px 2px 1px 0px rgba(0,0,0,0.14);
+    -webkit-box-shadow: 6px 6px 12px -1px rgba(0,0,0,0.14);
+    box-shadow: 2px 2px 1px 0px rgba(0,0,0,0.14);
 
-  cursor: pointer;
+    cursor: pointer;
+  }
 }
 
 .legend {

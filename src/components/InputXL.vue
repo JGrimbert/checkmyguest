@@ -8,31 +8,27 @@
           type="number"
           ref="input"
           :value="input.montant"
-          @input="updateInput"
-      >
+          @input="({ target}) => updateAmount(target)"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import {Component, Prop, Vue, Emit} from 'vue-property-decorator';
+import {InputXL} from "@/models/inputs";
 
-export default Vue.extend({
-  name: "InputXL",
-  props: {
-    input: {
-      label: { default: "" },
-      append: { default: "" },
-      montant: { default: 0 },
-      name: { default: "" }
-    },
-  },
-  methods: {
-    updateInput () {
-      this.$emit('updateInput', this.$refs["input"].value, this.input.name)
-    }
+@Component
+export default class ComponentInputXL extends Vue {
+
+  @Prop() input: InputXL | { name: string }
+
+  @Emit()
+  updateAmount (target: HTMLInputElement) {
+    return this.input.name;
   }
-})
+
+}
 </script>
 
 <style scoped lang="scss">
