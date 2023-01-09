@@ -8,22 +8,22 @@
           </p>
       </div>
       <div class="body">
-        <div class="mb-8 mx-6">
+        <div>
           <InputXL
-              :input="inputs.pret"
+              :input="inputs.credit"
               @update-amount="updateAmount"
           />
           <apexchart
               type="donut"
-              height="500"
+              height="400"
               :options="chartOptions"
               :series="coutMensuel"
           />
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col mx-12">
           <InputRange
-              :range="inputs.apport"
-              :args="{ montantApport: montantApportEuro }"
+              :range="inputs.provision"
+              :args="{ amountProvision: amountProvisionEuro }"
               @update-amount="updateAmount"
           />
           <InputRange
@@ -43,62 +43,71 @@
 
 import InputXL from "./components/InputXL.vue";
 import InputRange from "@/components/InputRange.vue";
+import {Vue, Component, Provide } from "vue-property-decorator";
 
-export default {
-  name: 'App',
-  components: { InputXL, InputRange },
-  data: () => ({
-    inputs: {
-      pret: {
-        name: 'pret',
-        montant:100000,
+@Component({
+  components: { InputXL, InputRange }
+})
+export default class ComponentInputRange extends Vue {
+
+  @Provide() inputs = {
+      credit: {
+        name: 'credit',
+        amount:100000,
         label: "Montant du bien",
         append: "€",
       },
-      apport: {
-        name: 'apport',
+      provision: {
+        name: 'provision',
         type: "range",
-        label: "Montant de l'apport",
-        montant:20,
+        label: "Montant&nbsp;de l'apport",
+        amount:20,
         min:10,
         max:40,
-        legend: ({ montant, montantApport }) => `${Math.floor(montantApport)}€ - ${montant}% du prix`,
+        legend: ({ amount, amountProvision }) => `${Math.floor(amountProvision)}€ - ${amount}% du prix`,
       },
       duree:{
         name: 'duree',
         type: "range",
         label: 'Durée de',
-        montant:20,
+        amount:20,
         min:10,
         max:30,
-        legend: ({ montant }) => `Durée de ${montant} ans`,
+        legend: ({ amount }) => `Durée de ${amount} ans`,
       },
       taux:{
         name: 'taux',
         type: "range",
         label: "Taux d'intérêt",
-        montant:165,
+        amount:165,
         min:100,
         max:300,
-        legend: ({ montant }) => montant/100 + "%",
+        legend: ({ amount }) => amount/100 + "%",
       },
-    },
-    /** ApexChart options **/
-    chartOptions: {
-      colors:['#E91E63', '#F44336'],
+    };
+
+  /** ApexChart options **/
+  @Provide() chartOptions = {
+      colors:['#FF0058', '#FF645A'],
       labels:["Mensualités", "Coût des intérêts"],
       chart: {
         type: 'donut',
         dropShadow: {
-          enabled: true,
+          enabled: false,
           top: 0,
           left: 0,
           blur: 8,
           opacity: 0.1
-        }
+        },
       },
       dataLabels: {
         enabled: false
+      },
+      plotOptions: {
+        pie: {
+          expandOnClick: false,
+          customScale: 0.9,
+        }
       },
       legend: {
         position: "bottom",
@@ -121,33 +130,34 @@ export default {
           return [seriesName, ":<b class='text-lg'>", opts.w.globals.series[opts.seriesIndex] + "€ / mois</b>"]
         }
       },
-    },
-  }),
-  methods: {
-    updateAmount (name, montant) {
-      console.log("pkdlmqsdmkq", name, montant)
-      this.inputs[name].montant = montant.value;
-    }
-  },
-  computed:  {
-    montantApportEuro () {
-      return this.inputs.pret.montant/100*this.inputs.apport.montant;
-    },
-    mensualite () {
-      return Math.floor((this.inputs.pret.montant-this.montantApportEuro)/(this.inputs.duree.montant * 12))
-    },
-    coutInterets () {
+    };
 
-      const coutWithoutApport = (this.inputs.pret.montant/(this.inputs.duree.montant * 12)) / (this.inputs.taux.montant/100);
-      const coutWithApport = this.mensualite / (this.inputs.taux.montant/100);
-      const diffWithApport = (coutWithoutApport - coutWithApport)*1.8;
-
-      return Math.floor(coutWithApport-diffWithApport)
-    },
-    coutMensuel () {
-      return [this.mensualite,this.coutInterets]
+    updateAmount (name, amount) {
+      this.inputs[name].amount = amount.value;
     }
-  },
+
+    get amountProvisionEuro () {
+      return this.inputs.credit.amount/100*this.inputs.provision.amount;
+    }
+
+    get monthlyPayement () {
+      return Math.floor((this.inputs.credit.amount-this.amountProvisionEuro)/(this.inputs.duree.amount * 12))
+    }
+
+    get interetCost () {
+
+      const amountTauxReal = (this.inputs.taux.amount/100);
+      const coutWithoutProvision = (this.inputs.credit.amount/(this.inputs.duree.amount * 12)) / amountTauxReal;
+      const coutWithProvision = this.monthlyPayement / amountTauxReal;
+      const diffWithProvision = (coutWithoutProvision - coutWithProvision)*1.8;
+
+      return Math.floor(coutWithProvision-diffWithProvision)
+    }
+
+    get coutMensuel () {
+      return [this.monthlyPayement,this.interetCost]
+    }
+
 }
 </script>
 
@@ -165,7 +175,7 @@ export default {
   }
 
   .body {
-    @apply grid grid-cols-1 lg:grid-cols-2
+    @apply grid grid-cols-1 lg:grid-cols-2 mb-8
   }
 
   .apexcharts {
@@ -176,39 +186,39 @@ export default {
 
     &-canvas svg {
       overflow: visible;
+
+      .legend-mouseover-inactive {
+        opacity: 1;
+      }
     }
 
     &-canvas svg foreignObject {
       overflow: visible;
     }
 
-  }
+    .bullet {
+        padding-left: 2em;
 
-  .bullet {
-      padding-left: 2em;
+        &::before {
+          content:" ";
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+          position: relative;
+          top:3px;
+          left:-1em;
+          border-radius: 0.33em;
+        }
 
-      &::before {
-        content:" ";
-        display: inline-block;
-        width: 1em;
-        height: 1em;
-        position: relative;
-        top:3px;
-        left:-1em;
-        border-radius: 0.33em;
-      }
+        &-interetCost::before {
+          background:#FF645A;
+        }
 
-      &-coutInterets::before {
-        background:#F44336;
-      }
-
-      &-mensualite::before {
-        background: #E91E63;
-      }
-
+        &-monthlyPayement::before {
+          background: #FF0058;
+        }
+    }
   }
 
 }
-
-
 </style>

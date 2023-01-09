@@ -8,7 +8,7 @@
         class="slider"
         :min="range.min"
         :max="range.max"
-        :value="range.montant"
+        :value="range.amount"
         @input="({ target }) => updateAmount(target)"
     >
     <div class="legend">{{ legend }}</div>
@@ -22,13 +22,13 @@ import {InputRange} from "@/models/inputs";
 @Component
 export default class ComponentInputRange extends Vue {
 
-  @Prop() range: InputRange | { legend: () => {}, montant: number, name: string };
+  @Prop() range: InputRange | { legend: () => {}, amount: number, name: string };
   @Prop() args: object | { };
 
   @Provide() style = '' as string;
 
   get legend() {
-    return this.range.legend({...this.args, montant: this.range.montant})
+    return this.range.legend({...this.args, amount: this.range.amount})
   }
 
   @Emit()
@@ -86,7 +86,8 @@ export default class ComponentInputRange extends Vue {
 }
 
 .legend {
-  width: 240px;
+  width: 80%;
+  padding-bottom: 12px;
   margin: 0 auto 2em;
   font-size: 1.2em;
   text-align: center;

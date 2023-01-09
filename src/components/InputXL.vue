@@ -1,13 +1,13 @@
 <template>
   <div>
-    <label for="montant">{{ input.label }}</label>
+    <label for="amount">{{ input.label }}</label>
     <div class="inputXL">
-      <span>{{ input.append }}</span>
+      <span class="append">{{ input.append }}</span>
       <input
-          id="montant"
+          id="amount"
           type="number"
           ref="input"
-          :value="input.montant"
+          :value="input.amount"
           @input="({ target}) => updateAmount(target)"
       />
     </div>
@@ -33,7 +33,6 @@ export default class ComponentInputXL extends Vue {
 
 <style scoped lang="scss">
 .inputXL {
-
   border-radius:8px;
   -webkit-box-shadow: 4px 5px 5px -2px #D8D8E0;
   box-shadow: 4px 5px 5px -2px #D8D8E0;
@@ -66,7 +65,7 @@ export default class ComponentInputXL extends Vue {
 
   }
 
-  span {
+  .append {
     position:absolute;
     color:#ABAFCC;
     background: #F5F4FC;
@@ -74,6 +73,5 @@ export default class ComponentInputXL extends Vue {
     padding: 0 12px;
     border-radius: 15px 0 0 15px;
   }
-
 }
 </style>

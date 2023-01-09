@@ -2,13 +2,13 @@ export interface InputXL {
     name: string;
     label: string;
     append: string;
-    montant: number;
+    amount: number;
 }
 
 export interface InputRange {
     name: string;
     label: string;
-    montant: number;
+    amount: number;
     legend(o: object): string;
     min: number;
     max:number;
