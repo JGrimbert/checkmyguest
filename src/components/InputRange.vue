@@ -24,7 +24,7 @@ import {ILegend} from "@/models/inputs";
 export default class ComponentInputRange extends Vue {
 
   @Prop() range: IInputRange;
-  @Prop() args: ILegend | {};
+  @Prop() args: ILegend | { amountProvision: 0 };
 
   @Provide() style = '' as string;
 
