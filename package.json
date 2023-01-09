@@ -13,8 +13,8 @@
     "autoprefixer": "^9.8.8",
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
-    "apexcharts": "https://github.com/JGrimbert/apexcharts.js.git",
-    "vue-apexcharts": "^1.6.2",
+    "apexcharts": "github:JGrimbert/apexcharts.js.git#master",
+    "vue-apexcharts": "github:JGrimbert/vue-apexcharts.git#master",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2"
   },

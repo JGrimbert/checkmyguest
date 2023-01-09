@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <div  class="container">
       <div class="header">
           <h1 class="text-6xl m-5">Calculez vos mensualités</h1>
           <p>
@@ -17,7 +18,7 @@
               type="donut"
               height="400"
               :options="chartOptions"
-              :series="coutMensuel"
+              :series="monthlyCostDetails"
           />
         </div>
         <div class="flex flex-col mx-12">
@@ -37,54 +38,53 @@
         </div>
       </div>
     </div>
+    </div>
 </template>
 
-<script>
+<script lang="ts">
 
+import { IInputs, IInputXL, IInputRange } from "@/models/inputs"
 import InputXL from "./components/InputXL.vue";
 import InputRange from "@/components/InputRange.vue";
+
 import {Vue, Component, Provide } from "vue-property-decorator";
+import {ComputedRef, computed} from "vue";
 
 @Component({
   components: { InputXL, InputRange }
 })
 export default class ComponentInputRange extends Vue {
 
-  @Provide() inputs = {
-      credit: {
-        name: 'credit',
-        amount:100000,
-        label: "Montant du bien",
-        append: "€",
-      },
-      provision: {
-        name: 'provision',
-        type: "range",
-        label: "Montant&nbsp;de l'apport",
-        amount:20,
-        min:10,
-        max:40,
-        legend: ({ amount, amountProvision }) => `${Math.floor(amountProvision)}€ - ${amount}% du prix`,
-      },
-      duree:{
-        name: 'duree',
-        type: "range",
-        label: 'Durée de',
-        amount:20,
-        min:10,
-        max:30,
-        legend: ({ amount }) => `Durée de ${amount} ans`,
-      },
-      taux:{
-        name: 'taux',
-        type: "range",
-        label: "Taux d'intérêt",
-        amount:165,
-        min:100,
-        max:300,
-        legend: ({ amount }) => amount/100 + "%",
-      },
-    };
+  @Provide() credit: IInputXL = {
+    name: 'credit',
+    amount:100000,
+    label: "Montant du bien",
+    append: "€",
+  }
+  @Provide() provision: IInputRange = {
+    name: 'provision',
+    label: "Montant de l'apport",
+    amount:20,
+    min:10,
+    max:40,
+    legend: ({ amount, amountProvision }) => `${Math.floor(amountProvision)}€ - ${amount}% du prix`,
+  }
+  @Provide() duree: IInputRange = {
+    name: 'duree',
+    label: 'Durée de',
+    amount:20,
+    min:10,
+    max:30,
+    legend: ({ amount }) => `Durée de ${amount} ans`,
+  }
+  @Provide() taux: IInputRange = {
+    name: 'taux',
+    label: "Taux d'intérêt",
+    amount:165,
+    min:100,
+    max:300,
+    legend: ({ amount }) => amount/100 + "%",
+  }
 
   /** ApexChart options **/
   @Provide() chartOptions = {
@@ -126,14 +126,14 @@ export default class ComponentInputRange extends Vue {
           horizontal: 24,
           vertical: 8
         },
-        formatter: function(seriesName, opts) {
+        formatter: function(seriesName: string, opts: any) {
           return [seriesName, ":<b class='text-lg'>", opts.w.globals.series[opts.seriesIndex] + "€ / mois</b>"]
         }
       },
     };
 
-    updateAmount (name, amount) {
-      this.inputs[name].amount = amount.value;
+    updateAmount (name: string, amount: HTMLInputElement) {
+      (this.inputs[name] as IInputRange | IInputXL).amount = parseInt(amount.value);
     }
 
     get amountProvisionEuro () {
@@ -142,6 +142,15 @@ export default class ComponentInputRange extends Vue {
 
     get monthlyPayement () {
       return Math.floor((this.inputs.credit.amount-this.amountProvisionEuro)/(this.inputs.duree.amount * 12))
+    }
+
+    get inputs () {
+      return {
+        credit: this.credit,
+        taux: this.taux,
+        duree: this.duree,
+        provision: this.provision,
+      } as IInputs
     }
 
     get interetCost () {
@@ -154,7 +163,7 @@ export default class ComponentInputRange extends Vue {
       return Math.floor(coutWithProvision-diffWithProvision)
     }
 
-    get coutMensuel () {
+    get monthlyCostDetails () {
       return [this.monthlyPayement,this.interetCost]
     }
 

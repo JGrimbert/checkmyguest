@@ -26,15 +26,6 @@ body {
     background: #F5F5FA;
 }
 
-label {
-    display: block;
-    margin-bottom: 0.8em;
-}
-
-input {
-    width: 100%;
-}
-
 .legend, .apexcharts-legend {
     background: #FFFFFF;
     -webkit-box-shadow: 6px 6px 12px -1px rgba(0,0,0,0.14), 0px 0px 9px 5px #F8F8FB;
@@ -44,3 +35,7 @@ input {
     font-weight: 600;
 }
 
+label {
+    margin-bottom: 1em;
+    display: block;
+}

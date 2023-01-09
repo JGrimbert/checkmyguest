@@ -17,22 +17,23 @@
 
 <script lang="ts">
 import {Component, Prop, Vue, Provide, Emit} from 'vue-property-decorator';
-import {InputRange} from "@/models/inputs";
+import { IInputRange } from "@/models/inputs";
+import {ILegend} from "@/models/inputs";
 
 @Component
 export default class ComponentInputRange extends Vue {
 
-  @Prop() range: InputRange | { legend: () => {}, amount: number, name: string };
-  @Prop() args: object | { };
+  @Prop() range: IInputRange;
+  @Prop() args: ILegend | {};
 
   @Provide() style = '' as string;
 
   get legend() {
-    return this.range.legend({...this.args, amount: this.range.amount})
+    return this.range.legend({ ...this.args, amount: this.range.amount })
   }
 
   @Emit()
-  updateAmount (target: any) {
+  updateAmount (target: HTMLInputElement) {
 
     const min: number = parseInt(target.min);
     const max: number = parseInt(target.max);
@@ -45,7 +46,7 @@ export default class ComponentInputRange extends Vue {
   }
 
   mounted() {
-    this.updateAmount(this.$refs["range"])
+    this.updateAmount(this.$refs["range"] as HTMLInputElement)
   }
 }
 </script>

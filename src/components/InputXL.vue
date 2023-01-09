@@ -16,12 +16,12 @@
 
 <script lang="ts">
 import {Component, Prop, Vue, Emit} from 'vue-property-decorator';
-import {InputXL} from "@/models/inputs";
+import { IInputXL } from "@/models/inputs";
 
 @Component
 export default class ComponentInputXL extends Vue {
 
-  @Prop() input: InputXL | { name: string }
+  @Prop() input: IInputXL | { name: string }
 
   @Emit()
   updateAmount (target: HTMLInputElement) {
@@ -52,6 +52,7 @@ export default class ComponentInputXL extends Vue {
     border-radius: 16px;
     -webkit-box-shadow: inset 0px 0px 15px 0px #EAEAEE;
     box-shadow: inset 16px 0px 10px 4px #EAEAEE;
+    width: 100%;
 
     &:focus-visible {
       outline: transparent;
