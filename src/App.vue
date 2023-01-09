@@ -28,11 +28,11 @@
               @update-amount="updateAmount"
           />
           <InputRange
-              :range="inputs.duree"
+              :range="inputs.duration"
               @update-amount="updateAmount"
           />
           <InputRange
-              :range="inputs.taux"
+              :range="inputs.rate"
               @update-amount="updateAmount"
           />
         </div>
@@ -48,7 +48,6 @@ import InputXL from "./components/InputXL.vue";
 import InputRange from "@/components/InputRange.vue";
 
 import {Vue, Component, Provide } from "vue-property-decorator";
-import {ComputedRef, computed} from "vue";
 
 @Component({
   components: { InputXL, InputRange }
@@ -69,17 +68,17 @@ export default class ComponentInputRange extends Vue {
     max:40,
     legend: ({ amount, amountProvision }) => `${Math.floor(amountProvision)}€ - ${amount}% du prix`,
   }
-  @Provide() duree: IInputRange = {
-    name: 'duree',
+  @Provide() duration: IInputRange = {
+    name: 'duration',
     label: 'Durée de',
     amount:20,
     min:10,
     max:30,
     legend: ({ amount }) => `Durée de ${amount} ans`,
   }
-  @Provide() taux: IInputRange = {
-    name: 'taux',
-    label: "Taux d'intérêt",
+  @Provide() rate: IInputRange = {
+    name: 'rate',
+    label: "rate d'intérêt",
     amount:165,
     min:100,
     max:300,
@@ -141,26 +140,26 @@ export default class ComponentInputRange extends Vue {
     }
 
     get monthlyPayement () {
-      return Math.floor((this.inputs.credit.amount-this.amountProvisionEuro)/(this.inputs.duree.amount * 12))
+      return Math.floor((this.inputs.credit.amount-this.amountProvisionEuro)/(this.inputs.duration.amount * 12))
     }
 
     get inputs () {
       return {
         credit: this.credit,
-        taux: this.taux,
-        duree: this.duree,
+        rate: this.rate,
+        duration: this.duration,
         provision: this.provision,
       } as IInputs
     }
 
     get interetCost () {
 
-      const amountTauxReal = (this.inputs.taux.amount/100);
-      const coutWithoutProvision = (this.inputs.credit.amount/(this.inputs.duree.amount * 12)) / amountTauxReal;
-      const coutWithProvision = this.monthlyPayement / amountTauxReal;
-      const diffWithProvision = (coutWithoutProvision - coutWithProvision)*1.8;
+      const amountRateReal = (this.inputs.rate.amount/100);
+      const costWithoutProvision = (this.inputs.credit.amount/(this.inputs.duration.amount * 12)) / amountRateReal;
+      const costWithProvision = this.monthlyPayement / amountRateReal;
+      const diffWithProvision = (costWithoutProvision - costWithProvision)*1.8;
 
-      return Math.floor(coutWithProvision-diffWithProvision)
+      return Math.floor(costWithProvision-diffWithProvision)
     }
 
     get monthlyCostDetails () {
