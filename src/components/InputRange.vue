@@ -88,9 +88,9 @@ export default class ComponentInputRange extends Vue {
 
 .legend {
   width: 80%;
-  padding-bottom: 12px;
+  padding: 6px 18px 8px;
   margin: 0 auto 2em;
-  font-size: 1.2em;
+  font-size: 1em;
   text-align: center;
 }
 </style>

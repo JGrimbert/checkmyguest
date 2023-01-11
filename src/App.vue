@@ -192,6 +192,10 @@ export default class ComponentInputRange extends Vue {
       margin: 2em auto 4em;
     }
 
+    &-legend {
+      padding: 9px 12px 11px;
+    }
+
     &-canvas svg {
       overflow: visible;
 

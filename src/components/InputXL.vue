@@ -45,7 +45,7 @@ export default class ComponentInputXL extends Vue {
     -webkit-appearance: none;
     -moz-appearance: textfield;
     appearance: none;
-    padding: 4px 70px;
+    padding: 2px 70px 6px;
     border: 0px;
     color: #ABAFCC;
     background: #F7F7FB;
@@ -70,8 +70,8 @@ export default class ComponentInputXL extends Vue {
     position:absolute;
     color:#ABAFCC;
     background: #F5F4FC;
-    line-height: 1.75em;
-    padding: 0 12px;
+    line-height: 57px;
+    padding: 0 12px 1px;
     border-radius: 15px 0 0 15px;
   }
 }
