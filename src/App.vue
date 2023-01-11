@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="container">
+    <div class="main">
       <div class="header">
         <h1 class="text-6xl m-5">Calculez vos mensualités</h1>
         <p>
@@ -174,8 +174,10 @@ export default class ComponentInputRange extends Vue {
 #app {
   font-family: URW Geometric;
   color: #2c3e50;
-  width: 100%;
-  padding: 2em 20%;
+
+  .main {
+    @apply container mx-auto px-8 2xl:px-64 lg:px-12;
+  }
 
   .header {
     @apply grid grid-cols-1 text-center text-xl mb-12;
