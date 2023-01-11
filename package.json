@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "autoprefixer": "^9.8.8",
